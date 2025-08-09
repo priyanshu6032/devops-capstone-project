@@ -124,3 +124,70 @@ class TestAccountService(TestCase):
         self.assertEqual(response.status_code, status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
 
     # ADD YOUR TEST CASES HERE ...
+    def test_account_all(self):
+        """It should return all of the accounts.
+        """
+        # BAD TEST
+        response = self.client.get("/accounts")
+        data = response.get_json()
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(data), 0)
+
+        created_accounts = self._create_accounts(5)
+        response = self.client.get("/accounts")
+        data = response.get_json()
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(data), 5)
+        print(data)
+        for account in created_accounts:
+            account_dict = account.serialize()
+            self.assertIn(account_dict, data)
+    
+    def test_read_an_account(self):
+        """It should Read an account from the database."""
+        # BAD TEST
+        response = self.client.get(f"/account/{43}")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+        created_accounts = self._create_accounts(5)
+        test_account = created_accounts[0]
+        response = self.client.get(f"/account/{test_account.id}")
+        data = response.get_json()
+        print(data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(data["id"], test_account.id)
+        self.assertEqual(data["name"], test_account.name)
+        self.assertEqual(data["email"], test_account.email)
+        self.assertEqual(data["address"], test_account.address)
+        self.assertEqual(data["phone_number"], test_account.phone_number)
+
+    def test_update(self):
+        """It should update the account from the database"""
+        # BAD TEST
+        response = self.client.put("/account/32", content_type="application/json")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+        created_accounts = self._create_accounts(5)
+        test_account = AccountFactory(id=created_accounts[0].id)
+        response = self.client.put(f"/account/{test_account.id}",json=test_account.serialize(), content_type="application/json")
+        data = response.get_json()
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(data["id"], test_account.id)
+        self.assertEqual(data["name"], test_account.name)
+        self.assertEqual(data["email"], test_account.email)
+        self.assertEqual(data["address"], test_account.address)
+        self.assertEqual(data["phone_number"], test_account.phone_number)
+        
+
+    def test_delete(self):
+        """It should delete the account from the database"""
+        created_accounts = self._create_accounts(5)
+        account = AccountFactory(id=created_accounts[0].id)
+        response = self.client.delete(f"/account/{account.id}",json=account.serialize(), content_type="application/json")
+        print(response.get_json())
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+    def test_method_not_allowed(self):
+        """It should not allow an illegal method call"""
+        resp = self.client.delete(BASE_URL)
+        self.assertEqual(resp.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)

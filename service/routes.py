@@ -62,13 +62,28 @@ def create_accounts():
 ######################################################################
 
 # ... place you code here to LIST accounts ...
-
-
+@app.route("/accounts", methods=["GET"])
+def account_all():
+    """
+    Return all accounts present in the database
+    """
+    accounts = Account.all()
+    results = [account.serialize() for account in accounts]
+    return jsonify(results), status.HTTP_200_OK
 ######################################################################
 # READ AN ACCOUNT
 ######################################################################
 
 # ... place you code here to READ an account ...
+@app.route("/account/<int:account_id>", methods=["GET"])
+def read(account_id):
+    """
+    It should retrive an account from database
+    """
+    body = Account.find(account_id)
+    if body == None:
+        return "",status.HTTP_404_NOT_FOUND
+    return body.serialize(), status.HTTP_200_OK
 
 
 ######################################################################
@@ -76,14 +91,32 @@ def create_accounts():
 ######################################################################
 
 # ... place you code here to UPDATE an account ...
-
+@app.route("/account/<int:account_id>", methods=["PUT"])
+def update(account_id):
+    """
+    It should update an account from database
+    """
+    account = Account.find(account_id)
+    if account == None:
+        return "", status.HTTP_404_NOT_FOUND
+    body = request.get_json()
+    account.deserialize(body)
+    account.update()
+    return account.serialize(), status.HTTP_200_OK
 
 ######################################################################
 # DELETE AN ACCOUNT
 ######################################################################
 
 # ... place you code here to DELETE an account ...
-
+@app.route("/account/<int:account_id>", methods=["DELETE"])
+def delete_account(account_id):
+    """
+    It should update an account from database
+    """
+    account = Account.find(account_id)
+    account.delete()
+    return "", status.HTTP_204_NO_CONTENT
 
 ######################################################################
 #  U T I L I T Y   F U N C T I O N S
