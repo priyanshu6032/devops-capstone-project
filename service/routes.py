@@ -75,7 +75,7 @@ def account_all():
 ######################################################################
 
 # ... place you code here to READ an account ...
-@app.route("/account/<int:account_id>", methods=["GET"])
+@app.route("/accounts/<int:account_id>", methods=["GET"])
 def read(account_id):
     """
     It should retrive an account from database
@@ -91,7 +91,7 @@ def read(account_id):
 ######################################################################
 
 # ... place you code here to UPDATE an account ...
-@app.route("/account/<int:account_id>", methods=["PUT"])
+@app.route("/accounts/<int:account_id>", methods=["PUT"])
 def update(account_id):
     """
     It should update an account from database
@@ -109,7 +109,7 @@ def update(account_id):
 ######################################################################
 
 # ... place you code here to DELETE an account ...
-@app.route("/account/<int:account_id>", methods=["DELETE"])
+@app.route("/accounts/<int:account_id>", methods=["DELETE"])
 def delete_account(account_id):
     """
     It should update an account from database
