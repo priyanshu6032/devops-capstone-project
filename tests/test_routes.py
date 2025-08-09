@@ -146,12 +146,12 @@ class TestAccountService(TestCase):
     def test_read_an_account(self):
         """It should Read an account from the database."""
         # BAD TEST
-        response = self.client.get(f"/account/{43}")
+        response = self.client.get(f"/accounts/{43}")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
         created_accounts = self._create_accounts(5)
         test_account = created_accounts[0]
-        response = self.client.get(f"/account/{test_account.id}")
+        response = self.client.get(f"/accounts/{test_account.id}")
         data = response.get_json()
         print(data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -164,12 +164,12 @@ class TestAccountService(TestCase):
     def test_update(self):
         """It should update the account from the database"""
         # BAD TEST
-        response = self.client.put("/account/32", content_type="application/json")
+        response = self.client.put("/accounts/32", content_type="application/json")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
         created_accounts = self._create_accounts(5)
         test_account = AccountFactory(id=created_accounts[0].id)
-        response = self.client.put(f"/account/{test_account.id}",json=test_account.serialize(), content_type="application/json")
+        response = self.client.put(f"/accounts/{test_account.id}",json=test_account.serialize(), content_type="application/json")
         data = response.get_json()
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(data["id"], test_account.id)
@@ -183,7 +183,7 @@ class TestAccountService(TestCase):
         """It should delete the account from the database"""
         created_accounts = self._create_accounts(5)
         account = AccountFactory(id=created_accounts[0].id)
-        response = self.client.delete(f"/account/{account.id}",json=account.serialize(), content_type="application/json")
+        response = self.client.delete(f"/accounts/{account.id}",json=account.serialize(), content_type="application/json")
         print(response.get_json())
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
