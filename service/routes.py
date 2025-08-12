@@ -95,6 +95,8 @@ def read(account_id):
 ######################################################################
 
 # ... place you code here to UPDATE an account ...
+
+
 @app.route("/accounts/<int:account_id>", methods=["PUT"])
 def update(account_id):
     """
@@ -113,6 +115,8 @@ def update(account_id):
 ######################################################################
 
 # ... place you code here to DELETE an account ...
+
+
 @app.route("/accounts/<int:account_id>", methods=["DELETE"])
 def delete_account(account_id):
     """
